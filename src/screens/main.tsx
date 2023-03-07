@@ -10,6 +10,7 @@ import AnimatedCheckbox from 'react-native-checkbox-reanimated';
 import ThemeToggle from '../components/theme-toggle';
 import { Pressable } from 'react-native';
 import { StyleSheet } from 'react-native';
+import TaskItem from '../components/task-item';
 
 export default function MainScreen () {
 
@@ -27,14 +28,7 @@ export default function MainScreen () {
     flex={1}
     >
       <VStack space={5} alignItems="center">
-        <Pressable onPress={handleCheckboxPress} style={styles.checkbox}>
-          <AnimatedCheckbox
-            checked={checked}
-            highlightColor="#4444ff"
-            checkmarkColor='white'
-            boxOutlineColor='#4444ff'
-          />
-        </Pressable>
+        <TaskItem isDone={checked} onToggleCheckbox={handleCheckboxPress}/>
         <Box p={10} bg={useColorModeValue('red.500', 'yellow.500')}>
           <Text>Hello</Text>
         </Box>
