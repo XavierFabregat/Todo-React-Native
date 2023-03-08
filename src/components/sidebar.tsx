@@ -38,7 +38,7 @@ const Sidebar = (props: DrawerContentComponentProps) => {
       p={7}
     >
       <VStack flex={1} space={2}>
-        <HStack justifyContent="space-between">
+        <HStack justifyContent={"flex-end"}>
           <IconButton 
             onPress={handlePressBackButton}
             borderRadius={100}
@@ -72,7 +72,7 @@ const Sidebar = (props: DrawerContentComponentProps) => {
         active={currentRoute === 'About'} 
         onPress={handlePressMenuAbout}
         icon='info'
-      >Tasks</MenuButton>
+      >About</MenuButton>
       </VStack>
       <Center>
         <ThemeToggle />
