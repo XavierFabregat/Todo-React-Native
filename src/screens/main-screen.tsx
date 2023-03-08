@@ -1,8 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Pressable } from 'react-native';
 import {
-  Text,
-  Box,
   Center,
   VStack,
   useColorModeValue,
@@ -10,8 +7,8 @@ import {
   Icon
 } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
+import AnimatedColorBox from '../components/animated-color-box';
 import ThemeToggle from '../components/theme-toggle';
-import TaskItem from '../components/task-item';
 import TaskList from '../components/task-list';
 import shortid from 'shortid';
 
@@ -24,16 +21,6 @@ const initialData = [
   {
     id: shortid.generate(),
     subject: 'Learn NativeBase',
-    done: false,
-  },
-  {
-    id: shortid.generate(),
-    subject: 'Learn React Navigation',
-    done: false,
-  },
-  {
-    id: shortid.generate(),
-    subject: 'Learn React Native Gesture Handler',
     done: false,
   }
 ]
@@ -93,10 +80,10 @@ export default function MainScreen () {
   }, []);
 
   return (
-    <Center 
-    _dark={{ bg: 'blueGray.900' }} 
-    _light={{ bg: 'blueGray.50' }} 
+    <AnimatedColorBox 
+    bg={useColorModeValue("warmGray.50", "primary.900")}
     flex={1}
+    w="full"
     >
       <VStack space={5} alignItems="center" w="full">
         <TaskList 
@@ -130,6 +117,6 @@ export default function MainScreen () {
           setEditingItemId(id);
         }}
       />
-    </Center>
+    </AnimatedColorBox>
   )
 };
