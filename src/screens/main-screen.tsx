@@ -12,6 +12,7 @@ import ThemeToggle from '../components/theme-toggle';
 import TaskList from '../components/task-list';
 import shortid from 'shortid';
 import Masthead from '../components/masthead';
+import NavBar from '../components/navbar';
 
 const initialData = [
   {
@@ -87,7 +88,7 @@ export default function MainScreen () {
     w="full"
     >
       <Masthead title="What's up, Xavi!" image={require('../assets/masthead.png')}>
-
+        <NavBar />
       </Masthead>
       <VStack space={5} alignItems="center" w="full">
         <TaskList 
