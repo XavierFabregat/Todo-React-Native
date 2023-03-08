@@ -1,14 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import {
-  Center,
+  Icon,
   VStack,
   useColorModeValue,
-  Fab,
-  Icon
+  Fab
 } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
 import AnimatedColorBox from '../components/animated-color-box';
-import ThemeToggle from '../components/theme-toggle';
 import TaskList from '../components/task-list';
 import shortid from 'shortid';
 import Masthead from '../components/masthead';
@@ -90,7 +88,15 @@ export default function MainScreen () {
       <Masthead title="What's up, Xavi!" image={require('../assets/masthead.png')}>
         <NavBar />
       </Masthead>
-      <VStack space={5} alignItems="center" w="full">
+      <VStack 
+        flex={1}
+        bg={useColorModeValue("warmGray.50", "primary.900")}
+        space={1} 
+        mt="-20px" 
+        borderTopLeftRadius="20px"
+        borderTopRightRadius="20px"
+        pt="20px"
+      >
         <TaskList 
           data={data}
           onToggleItem={handleToggleTaskItem}
@@ -100,7 +106,6 @@ export default function MainScreen () {
           onRemoveItem={handleRemoveItem}
           editingItemId={editingItemId}
         />
-        <ThemeToggle />
       </VStack>
       <Fab 
         position="absolute" 
