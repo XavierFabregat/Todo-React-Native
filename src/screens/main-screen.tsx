@@ -14,21 +14,30 @@ import TaskItem from '../components/task-item';
 
 export default function MainScreen () {
 
-  const [checked, isChecked] = React.useState<boolean>(false);
+  const [checked, setChecked] = React.useState<boolean>(false);
+  const [subject, setSubject] = React.useState<string>('Task Item');
+  const [isEditing, setEditing] = React.useState<boolean>(false);
 
   const handleCheckboxPress = () => {
-    isChecked(prev => !prev);
+    setChecked(prev => !prev);
   }
 
   return (
     <Center 
     _dark={{ bg: 'blueGray.900' }} 
     _light={{ bg: 'blueGray.50' }} 
-    px={4} 
     flex={1}
     >
-      <VStack space={5} alignItems="center">
-        <TaskItem isDone={checked} onToggleCheckbox={handleCheckboxPress}/>
+      <VStack space={5} alignItems="center" w="full">
+        <TaskItem 
+          isEditing={isEditing}
+          isDone={checked} 
+          onToggleCheckbox={handleCheckboxPress}
+          subject={subject}
+          onChangeSubject={setSubject}
+          onFinishEditing={() => setEditing(false)}
+          onPressLabel={() => setEditing(true)}
+        />
         <ThemeToggle />
       </VStack>
     </Center>
