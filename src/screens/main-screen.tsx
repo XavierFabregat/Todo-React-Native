@@ -3,8 +3,10 @@ import {
   Icon,
   VStack,
   useColorModeValue,
-  Fab
+  Fab,
+  KeyboardAvoidingView
 } from 'native-base';
+import { Platform } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import AnimatedColorBox from '../components/animated-color-box';
 import TaskList from '../components/task-list';
@@ -28,13 +30,6 @@ const initialData = [
 export default function MainScreen () {
   const [data, setData] = useState(initialData);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
-  const [checked, setChecked] = useState<boolean>(false);
-  const [subject, setSubject] = useState<string>('Task Item');
-  const [isEditing, setEditing] = useState<boolean>(false);
-
-  const handleCheckboxPress = useCallback(() => {
-    setChecked(prev => !prev);
-  }, []);
 
   const handleToggleTaskItem = useCallback((item: typeof initialData[0]) => {
     // Send it to Backend
@@ -85,28 +80,40 @@ export default function MainScreen () {
     flex={1}
     w="full"
     >
-      <Masthead title="What's up, Xavi!" image={require('../assets/masthead.png')}>
+      <Masthead title="What's up, Xavi?" image={require('../assets/masthead.png')}>
         <NavBar />
       </Masthead>
-      <VStack 
+      <KeyboardAvoidingView 
         flex={1}
         bg={useColorModeValue("warmGray.50", "primary.900")}
-        space={1} 
         mt="-20px" 
         borderTopLeftRadius="20px"
         borderTopRightRadius="20px"
         pt="20px"
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 20}
       >
-        <TaskList 
-          data={data}
-          onToggleItem={handleToggleTaskItem}
-          onFinishedEditing={handleFinishEditingTaskItem}
-          onPressLabel={handlePressTaskItemLabel}
-          onChangeSubject={handleChangeTaskItemSubject}
-          onRemoveItem={handleRemoveItem}
-          editingItemId={editingItemId}
-        />
-      </VStack>
+        <VStack 
+          flex={1}
+          bg={useColorModeValue("warmGray.50", "primary.900")}
+          space={1} 
+          mt="-20px" 
+          borderTopLeftRadius="20px"
+          borderTopRightRadius="20px"
+          pt="20px"
+        >
+          <TaskList 
+            data={data}
+            onToggleItem={handleToggleTaskItem}
+            onFinishedEditing={handleFinishEditingTaskItem}
+            onPressLabel={handlePressTaskItemLabel}
+            onChangeSubject={handleChangeTaskItemSubject}
+            onRemoveItem={handleRemoveItem}
+            editingItemId={editingItemId}
+          />
+        </VStack>
+      </KeyboardAvoidingView>
+
       <Fab 
         position="absolute" 
         renderInPortal={false} 

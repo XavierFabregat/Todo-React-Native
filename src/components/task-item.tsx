@@ -116,6 +116,7 @@ export default function TaskItem(props: Props) {
           py={0}
           autoFocus
           blurOnSubmit
+          cursorColor={"red"}
           onChange={handleChangeSubject}
           onBlur={onFinishEditing}
         />
