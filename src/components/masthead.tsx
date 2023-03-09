@@ -5,10 +5,11 @@ import { Box, VStack, Heading, Image } from 'native-base';
 interface Props {
   title: string
   image: ImageSourcePropType,
-  children: React.ReactNode
+  children: React.ReactNode,
+  titleColor?: string
 }
 
-const Masthead = ({ title, image, children }: Props) => {
+const Masthead = ({ title, image, children, titleColor }: Props) => {
   return (
     <VStack h="300px" pb={5}>
       <Image 
@@ -24,7 +25,7 @@ const Masthead = ({ title, image, children }: Props) => {
       />
       {children}
       <Box flex={1}/>
-      <Heading color="white" p={6} size="xl">
+      <Heading color={titleColor ? titleColor : "white"} p={6} size="xl">
         {title}
       </Heading>
     </VStack>

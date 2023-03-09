@@ -6,7 +6,7 @@ interface Props {
   mode?: string;
 }
 
-export default function ThemeToggle({ mode = "toggle" }) {
+export default function ThemeToggle({ mode = "toggle" }: Props) {
 
   const { colorMode, toggleColorMode } = useColorMode();
 

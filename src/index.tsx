@@ -37,16 +37,7 @@ const App = () => {
       <Drawer.Screen name='About' component={AboutScreen} />
     </Drawer.Navigator>
   ) : (
-    <Drawer.Navigator
-      initialRouteName='Login'
-      screenOptions={{
-        headerShown: false,
-        swipeEdgeWidth: 0,
-        drawerType: 'back',
-        overlayColor: '#00000000',
-      }}>
-      <Drawer.Screen name='Login' component={LoginScreen} />
-    </Drawer.Navigator>
+    <LoginScreen />
   )
 };
 

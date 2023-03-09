@@ -4,13 +4,13 @@ import {
   Box,
   VStack,
   useColorModeValue,
-  Image,
   Input,
-  Switch,
   HStack,
   Text,
   Icon,
-  Pressable
+  Pressable,
+  KeyboardAvoidingView,
+  Center
 } from 'native-base';
 import AnimatedColorBox from '../components/animated-color-box';
 import Masthead from '../components/masthead';
@@ -20,6 +20,13 @@ import type { User } from '../Types';
 import shortid from 'shortid';
 import { useAppDispatch } from '../hooks/redux.hooks';
 import { setUser } from '../redux/user.slice';
+import { Platform } from 'react-native';
+import { loginValidation } from '../Lib/loginValidation';
+import Animated, {useAnimatedStyle, useSharedValue, withRepeat, withTiming} from 'react-native-reanimated';
+import { InputLabel } from '../components/input-lable';
+import LoginForm from '../components/login-form';
+
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export default function LoginScreen () {
 
@@ -28,12 +35,36 @@ export default function LoginScreen () {
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [isUserValid, setIsUserValid] = React.useState(true);
+  const [isPasswordValid, setIsPasswordValid] = React.useState(true);
+
+  const inputOffSet = useSharedValue(0);
+
+  const shakeStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: Math.sin(inputOffSet.value * Math.PI) * 10}]
+  }), [inputOffSet]);
+
+  const shake = () => {
+    inputOffSet.value = withRepeat(withTiming(1, {duration: 100}), 5, false, () => {
+      inputOffSet.value = 0;
+    });
+  };
 
   function handleLogin () {
     // send username and password to backend and get user object
     if (!password || !username) {
       return;
     }
+    const [passwordValidation, userValidation] = loginValidation(username, password);
+    console.log(userValidation, passwordValidation)
+    setIsUserValid(userValidation);
+    setIsPasswordValid(passwordValidation);
+
+    if (!userValidation || !passwordValidation) {
+      shake();
+      return;
+    }
+
     const mockUser: User = { // TODO: remove this mock user and use the real user object
       id: shortid.generate(),
       username,
@@ -57,127 +88,39 @@ export default function LoginScreen () {
     )
   }
 
-  function InputLabel ({label} : {label: string}) {
-    return (
-      <View 
-        paddingX={3} 
-        width={100}
-        backgroundColor={useColorModeValue('blue.300', 'purple.700')} 
-        h={"full"} 
-        alignContent="center"
-        justifyItems={"center"}
-        justifyContent={"center"}
-      >
-        <Text 
-          fontSize="sm" 
-          fontWeight="bold" 
-          color={useColorModeValue('black', 'white')}
-          textAlign="center"
-        >
-          {label}
-        </Text>
-      </View>
-    )
-  }
+  
 
 
   return (
     <AnimatedColorBox
       flex={1}
-      bg={useColorModeValue('warmGray.50','warmGray.900')}
+      bg={useColorModeValue('warmGray.200','darkBlue.600')}
       w="full"
     >
       <Masthead 
-        title="Login" 
+        titleColor={useColorModeValue('white','black')}
+        title="" 
         image={require('../assets/login-masthead.png')}
       >
       </Masthead>
       <View
+        justifyContent={"center"}
         flex={1} 
         borderTopLeftRadius="20px"
         borderTopRightRadius="20px"
         bg={useColorModeValue('warmGray.50','primary.900')}
         mt={"-20px"}
-        pt="30px"
         p={4}
       >
-        <VStack flex={1} space={4} justifyContent={"space-evenly"}>
-          <Box alignItems="center">
-            <Input 
-              type='text'
-              isRequired
-              variant={isPasswordVisible ? 'filled' : 'outline'}
-              InputLeftElement={InputLabel({label: 'Username'})}
-              bgColor={useColorModeValue('warmGray.50','warmGray.900')}
-              borderColor={useColorModeValue('grey.700','gray.500')}
-              focusOutlineColor={useColorModeValue('black','white')}
-              size="lg"
-              invalidOutlineColor={'red.500'}
-              h={12}
-              onChangeText={(text) => setUsername(text)}
-            />
-          </Box>
-          <Box alignItems="center">
-            <Input 
-              type={isPasswordVisible ? 'text' : 'password'} 
-              isRequired
-              variant={isPasswordVisible ? 'filled' : 'outline'}
-              InputRightElement={passwordToggle()}
-              InputLeftElement={InputLabel({label: 'Password'})}
-              bgColor={useColorModeValue('warmGray.50','warmGray.900')}
-              borderColor={useColorModeValue('grey.700','gray.500')}
-              focusOutlineColor={useColorModeValue('black','white')}
-              size="lg"
-              invalidOutlineColor={'red.500'}
-              h={12}
-              onChangeText={(text) => setPassword(text)}
-            />
-          </Box>
-          <Box alignItems={"center"}>
-            <VStack alignContent={"center"}>
-              <Pressable onPress={() => console.log('Forgot password pressed')}>
-                <Text
-                  fontSize="sm"
-                  fontWeight="bold"
-                  color={useColorModeValue('black', 'white')}
-                  textAlign="center"
-                >
-                  Forgot password?
-                </Text>
-              </Pressable>
-            <HStack 
-              space={2} 
-              alignItems="center" 
-              justifyContent={'space-around'} 
-              marginTop={10} 
-              w={"70%"}>
-               <Pressable onPress={() => console.log('Register Pressed')}>
-                <Text
-                  fontSize="sm"
-                  fontWeight="bold"
-                  color={useColorModeValue('black', 'white')}
-                  textAlign="center"
-                >
-                  Register
-                </Text>
-              </Pressable>
-                 <Pressable onPress={handleLogin}>
-                <Text
-                  fontSize="sm"
-                  fontWeight="bold"
-                  color={useColorModeValue('black', 'white')}
-                  textAlign="center"
-                >
-                  Log In
-                </Text>
-              </Pressable>
-            </HStack>
-            </VStack>
-          </Box>
-          <Box alignItems={"flex-end"} w="full">
-            <ThemeToggle mode='icons'/>
-          </Box>
-        </VStack>
+        <Center>
+          <Text fontWeight={"bold"} fontSize={"2xl"}>
+            Welcome Back!
+          </Text>
+        </Center>
+        <LoginForm />
+        <Box alignItems={"flex-end"} w="full" p={5}>
+          <ThemeToggle mode='icons'/>
+        </Box>
       </View>
     </AnimatedColorBox>
   )

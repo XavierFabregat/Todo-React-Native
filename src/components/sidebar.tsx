@@ -13,6 +13,7 @@ import AnimatedColorBox from './animated-color-box';
 import ThemeToggle from './theme-toggle';
 import { Feather } from '@expo/vector-icons';
 import MenuButton from './menu-button';
+import LogOutButton from './log-out-button';
 
 const Sidebar = (props: DrawerContentComponentProps) => {
   const { state, navigation } = props;
@@ -44,11 +45,12 @@ const Sidebar = (props: DrawerContentComponentProps) => {
             borderRadius={100}
             variant="outline"
             borderColor={useColorModeValue('blue.300', 'darkBlue.700')}
+            bgColor={useColorModeValue('darkBlue.500', 'blue.300')}
             _icon={{
               as: Feather,
               name: 'chevron-left',
               size: 6,
-              color: useColorModeValue('blue.800', 'darkBlue.700'),
+              color: useColorModeValue('white', 'darkBlue.700'),
             }}
           />
         </HStack>
@@ -74,9 +76,11 @@ const Sidebar = (props: DrawerContentComponentProps) => {
         icon='info'
       >About</MenuButton>
       </VStack>
-      <Center>
+
+      <HStack justifyContent={"space-between"} mt={8} alignItems={"center"}>
         <ThemeToggle />
-      </Center>
+        <LogOutButton />
+      </HStack>
     </AnimatedColorBox>
   )
 };
