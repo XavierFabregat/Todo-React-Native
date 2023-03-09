@@ -4,6 +4,7 @@ import { PanGestureHandlerProps } from 'react-native-gesture-handler';
 import TaskItem from './task-item';
 import { makeStyledComponent } from '../utils/styled';
 import { ScrollView } from 'react-native-gesture-handler';
+import type { Todo } from '../Types';
 
 const StyledView = makeStyledComponent(View);
 const StyledScrollView = makeStyledComponent(ScrollView);
@@ -15,23 +16,23 @@ interface TaskItemData {
 }
 
 interface TaskListProps {
-  data: TaskItemData[];
+  data: Todo[];
   editingItemId: string | null;
-  onToggleItem: (item: TaskItemData) => void;
-  onChangeSubject: (item: TaskItemData, subject: string) => void;
-  onFinishedEditing: (item: TaskItemData) => void;
-  onPressLabel: (item: TaskItemData) => void;
-  onRemoveItem: (item: TaskItemData) => void;
+  onToggleItem: (item: Todo) => void;
+  onChangeSubject: (item: Todo, subject: string) => void;
+  onFinishedEditing: (item: Todo) => void;
+  onPressLabel: (item: Todo) => void;
+  onRemoveItem: (item: Todo) => void;
 }
 
 interface TaskItemProps extends Pick<PanGestureHandlerProps, 'simultaneousHandlers'> {
-  data: TaskItemData;
+  data: Todo;
   isEditing: boolean;
-  onToggleItem: (item: TaskItemData) => void;
-  onChangeSubject: (item: TaskItemData, subject: string) => void;
-  onFinishedEditing: (item: TaskItemData) => void;
-  onRemove: (item: TaskItemData) => void;
-  onPressLabel: (item: TaskItemData) => void;
+  onToggleItem: (item: Todo) => void;
+  onChangeSubject: (item: Todo, subject: string) => void;
+  onFinishedEditing: (item: Todo) => void;
+  onRemove: (item: Todo) => void;
+  onPressLabel: (item: Todo) => void;
 }
 
 export const AnimatedTaksItem = (props: TaskItemProps) => {
@@ -88,9 +89,9 @@ export const AnimatedTaksItem = (props: TaskItemProps) => {
     >
       <TaskItem 
         simultaneousHandlers={simultaneousHandlers}
-        subject={data.subject}
+        subject={data.title}
         isEditing={isEditing}
-        isDone={data.done}
+        isDone={data.completed}
         onToggleCheckbox={handleToggleCheckbox}
         onChangeSubject={handleChangeSubject}
         onFinishEditing={handleFinishEditing}

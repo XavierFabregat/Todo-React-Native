@@ -13,65 +13,58 @@ import TaskList from '../components/task-list';
 import shortid from 'shortid';
 import Masthead from '../components/masthead';
 import NavBar from '../components/navbar';
+import type { Todo } from '../Types';
+import { useAppDispatch, useAppSelector } from '../hooks/redux.hooks';
+import { toggleTodoComplete, updateTodo, deleteTodo, addTodo } from '../redux/todo.slice';
 
-const initialData = [
-  {
-    id: shortid.generate(),
-    subject: 'Learn React Native',
-    done: false,
-  },
-  {
-    id: shortid.generate(),
-    subject: 'Learn NativeBase',
-    done: false,
-  }
-]
 
 export default function MainScreen () {
-  const [data, setData] = useState(initialData);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
 
-  const handleToggleTaskItem = useCallback((item: typeof initialData[0]) => {
+  const data = useAppSelector(state => state.todos);
+  const dispatch = useAppDispatch();
+
+  const handleToggleTaskItem = useCallback((item: Todo) => {
     // Send it to Backend
-    setData(prevData => {
-      const newData = [...prevData];
-      const index = prevData.indexOf(item);
-      newData[index] = {
-        ...item,
-        done: !item.done,
-      }
-      return newData;
-    })
+    dispatch(toggleTodoComplete(item.id));
   }, []);
 
-  const handleFinishEditingTaskItem = useCallback((_item: typeof initialData[0]) => {
+  const handleFinishEditingTaskItem = useCallback((_item: Todo) => {
     // Send it to Backend
     setEditingItemId(null);
   }, []);
 
-  const handlePressTaskItemLabel = useCallback((item: typeof initialData[0]) => {
+  const handlePressTaskItemLabel = useCallback((item: Todo) => {
     setEditingItemId(item.id);
   }, []);
   
-  const handleChangeTaskItemSubject = useCallback((item: typeof initialData[0], newSubject: string) => {
+  const handleChangeTaskItemSubject = useCallback((item: Todo, newSubject: string) => {
     // Send it to Backend
-    setData(prevData => {
-      const newData = [...prevData];
-      const index = prevData.indexOf(item);
-      newData[index] = {
-        ...item,
-        subject: newSubject,
-      }
-      return newData;
-    })
+    const updatedTodo = {
+      ...item,
+      title: newSubject,
+    }
+    dispatch(updateTodo(updatedTodo));
   }, []);
 
-  const handleRemoveItem = useCallback((item: typeof initialData[0]) => {
+  const handleRemoveItem = useCallback((item: Todo) => {
     // Send it to Backend
-    setData(prevData => {
-      const newData = prevData.filter(i => i.id !== item.id);
-      return newData;
-    })
+    dispatch(deleteTodo(item.id));
+  }, []);
+
+  const handleAddItem = useCallback(() => {
+    const id = shortid.generate();
+    const newTodo = {
+      id,
+      title: 'New Task',
+      completed: false,
+      description: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      userId: shortid.generate()
+    }
+    dispatch(addTodo(newTodo));
+    setEditingItemId(id);
   }, []);
 
   return (
@@ -121,18 +114,7 @@ export default function MainScreen () {
         icon={<Icon color="white" as={<AntDesign name="plus" />}/>}
         colorScheme={useColorModeValue('blue', 'darkBlue')}
         bg={useColorModeValue('blue.500', 'blue.400')}
-        onPress={() => {
-          const id = shortid.generate();
-          setData(prevData => (
-            [{
-              id,
-              subject: 'New Task',
-              done: false,
-            }, 
-            ...prevData]
-          ))
-          setEditingItemId(id);
-        }}
+        onPress={handleAddItem}
       />
     </AnimatedColorBox>
   )

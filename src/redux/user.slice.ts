@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../Types';
+import type { User } from '../Types';
 
 const initialState: User = {
   id: '',
@@ -16,9 +16,15 @@ const userSlice = createSlice({
   reducers: {
     setUser(_, action: PayloadAction<User>) {
       return action.payload;
+    },
+    updateUser(_, action: PayloadAction<User>) {
+      return action.payload;
+    },
+    removeUser() {
+      return initialState;
     }
   }
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser , updateUser, removeUser } = userSlice.actions;
 export default userSlice.reducer;
