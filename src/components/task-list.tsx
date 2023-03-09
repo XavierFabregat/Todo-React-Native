@@ -9,12 +9,6 @@ import type { Todo } from '../Types';
 const StyledView = makeStyledComponent(View);
 const StyledScrollView = makeStyledComponent(ScrollView);
 
-interface TaskItemData {
-  id: string;
-  subject: string;
-  done: boolean;
-}
-
 interface TaskListProps {
   data: Todo[];
   editingItemId: string | null;
