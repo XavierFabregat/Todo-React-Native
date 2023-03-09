@@ -101,7 +101,7 @@ export default function LoginScreen () {
         pt="30px"
         p={4}
       >
-        <VStack flex={1} space={4}>
+        <VStack flex={1} space={4} justifyContent={"space-evenly"}>
           <Box alignItems="center">
             <Input 
               type='text'
@@ -174,9 +174,11 @@ export default function LoginScreen () {
             </HStack>
             </VStack>
           </Box>
+          <Box alignItems={"flex-end"} w="full">
+            <ThemeToggle mode='icons'/>
+          </Box>
         </VStack>
       </View>
-      <ThemeToggle />
     </AnimatedColorBox>
   )
 }
