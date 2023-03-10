@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, useColorModeValue, View, Box, Input, HStack, Icon, Pressable, Center, KeyboardAvoidingView } from "native-base";
 import { InputLabel } from "../components/input-lable";
 import AnimatedColorBox from "../components/animated-color-box";
@@ -24,6 +24,7 @@ export default function RegisterScreen () {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [doPasswordsMatch, setDoPasswordsMatch] = useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -97,6 +98,10 @@ export default function RegisterScreen () {
 
   }
 
+  useEffect(()=> {
+    console.log('isInputFocused', isInputFocused)
+  }, [isInputFocused])
+
 
   return (
     <AnimatedColorBox 
@@ -128,7 +133,11 @@ export default function RegisterScreen () {
             type='text'
             isRequired
             isInvalid={!isUserValid}
-            onFocus={() => {setIsUserValid(true)}}
+            onFocus={() => {
+              setIsUserValid(true);
+              setIsInputFocused(true);
+            }}
+            onBlur={() => setIsInputFocused(false)}
             InputLeftElement={InputLabel({label: 'Username'})}
             bgColor={useColorModeValue('warmGray.50','warmGray.900')}
             borderColor={useColorModeValue('grey.700','gray.500')}
@@ -156,7 +165,9 @@ export default function RegisterScreen () {
             onFocus={() => {
               setDoPasswordsMatch(true)
               setIsPasswordValid(true)
+              setIsInputFocused(true);
             }}
+            onBlur={() => setIsInputFocused(false)}
             isInvalid={!isPasswordValid}
             variant={isPasswordVisible ? 'filled' : 'outline'}
             InputRightElement={passwordToggle()}
@@ -176,9 +187,11 @@ export default function RegisterScreen () {
             type={isPasswordVisible ? 'text' : 'password'} 
             isRequired
             onFocus={() => {
-              setDoPasswordsMatch(true)
-              setIsPasswordValid(true)
+              setDoPasswordsMatch(true);
+              setIsPasswordValid(true);
+              setIsInputFocused(true);
             }}
+            onBlur={() => setIsInputFocused(false)}
             isInvalid={!doPasswordsMatch}
             variant={isPasswordVisible ? 'filled' : 'outline'}
             InputLeftElement={InputLabel({label: 'Repeat Password'})}
@@ -205,8 +218,7 @@ export default function RegisterScreen () {
           >Your passwords don't match.</Text>}
         </Center>
         </View>
-        </KeyboardAvoidingView>
-        <Box 
+        {!isInputFocused && (<Box 
           alignSelf={"flex-end"} 
           p={5} 
           bg={useColorModeValue('blue.300', 'purple.700')} 
@@ -215,13 +227,14 @@ export default function RegisterScreen () {
           alignItems={"center"}
           mb={10}
           mr={10}
-        >
+          >
           <Pressable onPress={registerFormSubmit}>
             <Text>
               Register
             </Text>
           </Pressable>
-        </Box>
+        </Box>)}
+        </KeyboardAvoidingView>
     </AnimatedColorBox>
   )
 }
