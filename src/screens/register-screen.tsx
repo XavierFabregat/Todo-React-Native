@@ -98,9 +98,6 @@ export default function RegisterScreen () {
 
   }
 
-  useEffect(()=> {
-    console.log('isInputFocused', isInputFocused)
-  }, [isInputFocused])
 
 
   return (
