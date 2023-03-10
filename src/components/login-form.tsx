@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Input, Center, useColorModeValue, KeyboardAvoidingView, Pressable, HStack, Icon, VStack, Text, ScrollView } from 'native-base';
-import Animated,{ useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import Animated,{ useAnimatedStyle, useSharedValue, withRepeat, withTiming, Easing } from 'react-native-reanimated';
 import { useAppDispatch } from '../hooks/redux.hooks';
 import { InputLabel } from './input-lable';
 import { Entypo } from '@expo/vector-icons';
@@ -9,19 +9,30 @@ import shortid from 'shortid';
 import { setUser } from '../redux/user.slice';
 import { loginValidation } from '../Lib/loginValidation';
 import { Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import type { StackNavigationProp } from '@react-navigation/stack';
 
 const AnimatedBox = Animated.createAnimatedComponent(Box);
+
+type StackParamList = {
+  Login: undefined;
+  Register: undefined;
+};
+
+type NavigationProps = StackNavigationProp<StackParamList>
 
 
 export default function LoginForm () {
 
-   const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<NavigationProps>();
 
-  const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [isUserValid, setIsUserValid] = React.useState(true);
-  const [isPasswordValid, setIsPasswordValid] = React.useState(true);
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isUserValid, setIsUserValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
 
 
   function handleLogin () {
@@ -58,7 +69,8 @@ export default function LoginForm () {
   }), [inputOffSet]);
 
   const shake = () => {
-    inputOffSet.value = withRepeat(withTiming(1, {duration: 100}), 5, false, () => {
+    const easing = Easing.bezier(0.25, 0.1, 0.25, 1);
+    inputOffSet.value = withRepeat(withTiming(1, {duration: 100, easing}), 5, false, () => {
       inputOffSet.value = 0;
     });
   };
@@ -86,8 +98,8 @@ export default function LoginForm () {
             type='text'
             isRequired
             onFocus={() => {
-              setIsUserValid(true)
-              setIsPasswordValid(true)
+              setIsUserValid(true);
+              setIsPasswordValid(true);
             }}
             isInvalid={!isUserValid}
             variant={isPasswordVisible ? 'filled' : 'outline'}
@@ -105,8 +117,8 @@ export default function LoginForm () {
         <AnimatedBox alignItems="center" style={[shakeStyle]}>
           <Input 
             onFocus={() => {
-              setIsPasswordValid(true)
-              setIsUserValid(true)
+              setIsPasswordValid(true);
+              setIsUserValid(true);
             }}
             type={isPasswordVisible ? 'text' : 'password'} 
             isRequired
@@ -150,12 +162,12 @@ export default function LoginForm () {
        <HStack 
           space={2} 
           alignItems="center" 
-          justifyContent={'space-around'} 
+          justifyContent={'space-between'} 
           marginTop={10} 
-          w={"70%"}
+          w={"100%"}
         >
-          <Box bg={useColorModeValue('blue.300', 'purple.700')} width={"50%"} height={"150%"} borderRadius={5} alignItems="center" justifyContent={"center"}>
-            <Pressable onPress={() => console.log('Register Pressed')}>
+          <Box bg={useColorModeValue('blue.300', 'purple.700')} width={"40%"} height={"150%"} borderRadius={5} alignItems="center" justifyContent={"center"}>
+            <Pressable onPress={() => navigation.navigate('Register')}>
               <Text
                 fontSize="sm"
                 fontWeight="bold"
@@ -166,7 +178,7 @@ export default function LoginForm () {
               </Text>
             </Pressable>
           </Box>
-          <Box bg={useColorModeValue('blue.300', 'purple.700')} width={"50%"} height={"150%"} borderRadius={5} alignItems="center" justifyContent={"center"}>
+          <Box bg={useColorModeValue('blue.300', 'purple.700')} width={"40%"} height={"150%"} borderRadius={5} alignItems="center" justifyContent={"center"}>
             <Pressable onPress={handleLogin}>
               <Text
                 fontSize="sm"

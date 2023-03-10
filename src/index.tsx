@@ -7,8 +7,13 @@ import AboutScreen from './screens/about-screen';
 import LoginScreen from './screens/login-screen';
 import Sidebar from './components/sidebar';
 import { useAppSelector } from './hooks/redux.hooks';
+import {
+  createStackNavigator
+} from '@react-navigation/stack'
+import RegisterScreen from './screens/register-screen';
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 const App = () => {
 
@@ -37,7 +42,15 @@ const App = () => {
       <Drawer.Screen name='About' component={AboutScreen} />
     </Drawer.Navigator>
   ) : (
-    <LoginScreen />
+    <Stack.Navigator
+      initialRouteName='Login'
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name='Login' component={LoginScreen} />
+      <Stack.Screen name='Register' component={RegisterScreen} />
+    </Stack.Navigator>
   )
 };
 
