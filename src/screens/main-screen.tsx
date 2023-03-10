@@ -14,7 +14,7 @@ import shortid from 'shortid';
 import Masthead from '../components/masthead';
 import NavBar from '../components/navbar';
 import type { Todo } from '../Types';
-import { useAppDispatch, useAppSelector } from '../hooks/redux.hooks';
+import { useAppDispatch, useAppSelector, useUser } from '../hooks/redux.hooks';
 import { toggleTodoComplete, updateTodo, deleteTodo, addTodo } from '../redux/todo.slice';
 
 
@@ -23,6 +23,7 @@ export default function MainScreen () {
 
   const data = useAppSelector(state => state.todos);
   const dispatch = useAppDispatch();
+  const user = useUser();
 
   const handleToggleTaskItem = useCallback((item: Todo) => {
     // Send it to Backend
@@ -73,7 +74,7 @@ export default function MainScreen () {
     flex={1}
     w="full"
     >
-      <Masthead title="What's up, Xavi?" image={require('../assets/masthead.png')}>
+      <Masthead title={`What's up, ${user.username}?`} image={require('../assets/masthead.png')}>
         <NavBar />
       </Masthead>
       <KeyboardAvoidingView 

@@ -28,9 +28,12 @@ const todoSlice = createSlice({
       if (index !== -1) {
         state[index].completed = !state[index].completed;
       }
+    },
+    cleanUpTodos() {
+      return initialState;
     }
   }
 });
 
-export const { setTodos, addTodo, updateTodo, deleteTodo, toggleTodoComplete } = todoSlice.actions;
+export const { setTodos, addTodo, updateTodo, deleteTodo, toggleTodoComplete, cleanUpTodos } = todoSlice.actions;
 export default todoSlice.reducer;
